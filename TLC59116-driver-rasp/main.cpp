@@ -29,7 +29,11 @@ int main(int argc, const char * argv[]) {
 		bool rising=true;
 		u_int16_t pwm = 0;
 		while (!complete){
-			tlc.setGroupPWMDimming( pwm);
+			tlc.setGroupPWMDimming(pwm);
+			std::cout << "LED 8 "	<< (int)tlc.getPWMDimming(8)		<<std::endl;
+			std::cout << "Dim "		<< (int)tlc.getGroupPWMDimming()	<<std::endl;
+			std::cout << "E1 "		<< (int)tlc.getErrorFLag1()			<<std::endl;
+			std::cout << "E2 "		<< (int)tlc.getErrorFLag2()			<<std::endl;
 			if(rising){
 				pwm++;
 				
@@ -45,7 +49,7 @@ int main(int argc, const char * argv[]) {
 			}
 			
 			
-			usleep(2500);
+			usleep(5500);
 			
 		}
 

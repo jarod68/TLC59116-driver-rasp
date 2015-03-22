@@ -220,6 +220,48 @@ void TLC59116	::	setAllPWMDimming (u_int16_t _pwm)
 	device->writeReg(MASK_AUTO_INCR | ADR_PWM_0, data, dataSize);
 }
 
+unsigned char	TLC59116	::	getPWMDimming (const u_int8_t _led) const
+{
+	TLC59116::LED led = ledLUT[_led];
+	unsigned char data = 0x00;
+	
+	device->readReg(led.adr_pwm, &data);
+	
+	return data;
+}
+
+unsigned char	TLC59116	::	getGroupPWMDimming () const
+{
+	unsigned char data = 0x00;
+	
+	device->readReg(ADR_GRPPWM, &data);
+	
+	return data;
+}
+
+bool			TLC59116	::	isLEDOn	(const u_int8_t _led) const
+{
+	return false; //TODO: need implementation
+}
+
+unsigned char	TLC59116	::	getErrorFLag1 () const
+{
+	unsigned char data = 0x00;
+	
+	device->readReg(ADR_ERRFLAG_1, &data);
+	
+	return data;
+}
+
+unsigned char	TLC59116	::	getErrorFLag2 () const
+{
+	unsigned char data = 0x00;
+	
+	device->readReg(ADR_ERRFLAG_2, &data);
+	
+	return data;
+}
+
 void TLC59116	::	handleSetUseGroupDimming (unsigned char * _LedOut_Register, const u_int16_t _LedOut_Register_ADR)
 {
 	unsigned char newLedOutRegister = *_LedOut_Register;

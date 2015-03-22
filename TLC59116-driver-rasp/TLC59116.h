@@ -80,30 +80,34 @@ private:
 	bool						useGroupDimming;
 	
 public:
-			TLC59116	(std::string _i2cFileName, unsigned char _deviceAddress, bool _useGroupDimming=false);
-	virtual ~TLC59116	();
+							TLC59116				(std::string _i2cFileName, unsigned char _deviceAddress, bool _useGroupDimming=false);
+	virtual					~TLC59116				();
 	
-	virtual I2C *		getI2CDevice	();
-	virtual void		allOn			();
-	virtual void		allOff			();
-	virtual void		setOn			(const u_int8_t _led);
-	virtual void		setOff			(const u_int8_t _led);
-	virtual void		setPWMDimming	(const u_int8_t _led, u_int16_t _pwm);
-	virtual bool		isUseGroupDimming () const;
-	virtual void		setUseGroupDimming (const bool _useGroupDimming);
-	virtual void		setGroupPWMDimming (u_int16_t _pwm);
-	virtual void		setAllPWMDimming	(u_int16_t _pwm);
-
+	virtual I2C *			getI2CDevice			();
+	virtual void			allOn					();
+	virtual void			allOff					();
+	virtual void			setOn					(const u_int8_t _led);
+	virtual void			setOff					(const u_int8_t _led);
+	virtual void			setPWMDimming			(const u_int8_t _led, u_int16_t _pwm);
+	virtual bool			isUseGroupDimming		() const;
+	virtual void			setUseGroupDimming		(const bool _useGroupDimming);
+	virtual void			setGroupPWMDimming		(u_int16_t _pwm);
+	virtual void			setAllPWMDimming		(u_int16_t _pwm);
+	virtual unsigned char	getPWMDimming			(const u_int8_t _led) const;
+	virtual unsigned char	getGroupPWMDimming		() const;
+	virtual bool			isLEDOn					(const u_int8_t _led) const;
+	virtual unsigned char	getErrorFLag1			() const;
+	virtual unsigned char	getErrorFLag2			() const;
 	
 private:
-			void		init			();
-			void		updateLedOutRegister	(const unsigned char _new_LedOut_Register_Value,
-												 unsigned char * _LedOut_Register,
-												 const u_int16_t _LedOut_Register_ADR);
-			void		handleSetUseGroupDimming (unsigned char * _LedOut_Register,
-												  const u_int16_t _LedOut_Register_ADR);
-	unsigned char		getMaskOn				(const u_int8_t pos) const;
-	unsigned char		getMaskOff				(const u_int8_t pos) const;
+			void			init					();
+			void			updateLedOutRegister	(const unsigned char _new_LedOut_Register_Value,
+														unsigned char * _LedOut_Register,
+														const u_int16_t _LedOut_Register_ADR);
+			void			handleSetUseGroupDimming (unsigned char * _LedOut_Register,
+														const u_int16_t _LedOut_Register_ADR);
+	unsigned char			getMaskOn				(const u_int8_t pos) const;
+	unsigned char			getMaskOff				(const u_int8_t pos) const;
 };
 
 
