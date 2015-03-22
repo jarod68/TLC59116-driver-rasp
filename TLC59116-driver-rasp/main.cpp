@@ -19,17 +19,22 @@ int main(int argc, const char * argv[]) {
    
     //std::cout << "Hello, World!\n";
     
-    TLC59116 tlc ("/dev/i2c-1", 0x61);
+    TLC59116 tlc ("/dev/i2c-1", 0x61, false);
 	//tlc.allOn();
 	bool flag = false;
 	
 	u_int16_t pwm = 0;
 	
 	tlc.setOn(8);
+	tlc.setOn(9);
+	tlc.setOn(10);
+	tlc.setOn(11);
+	tlc.setUseGroupDimming(true);
+	
 	bool rising=true;
 	while (true){
-		tlc.setPWMDimming(8, pwm);
-		
+		//tlc.setGPWMDimming(8, pwm);
+		tlc.setGroupPWMDimming(pwm);
 		if(rising){
 			pwm++;
 			

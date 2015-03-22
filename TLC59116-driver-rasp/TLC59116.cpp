@@ -9,9 +9,7 @@
 
 #include "TLC59116.h"
 
-
-
-TLC59116	::	TLC59116	(std::string _i2cFileName, unsigned char _deviceAddress)
+TLC59116	::	TLC59116	(std::string _i2cFileName, unsigned char _deviceAddress, bool _useGroupDimming)
 							:
 							device				(new I2C(_i2cFileName, _deviceAddress)),
 							ledout_0Register	(new unsigned char),
@@ -37,7 +35,8 @@ TLC59116	::	TLC59116	(std::string _i2cFileName, unsigned char _deviceAddress)
 									{ADR_LEDOUT_3, ADR_PWM_14,	LEDOUT_POS_2,	ledout_3Register},
 									{ADR_LEDOUT_3, ADR_PWM_15,	LEDOUT_POS_3,	ledout_3Register}
 									}
-												)
+												),
+							useGroupDimming(_useGroupDimming)
 {
 	
 	*ledout_0Register	=	0x00;
@@ -132,19 +131,19 @@ void TLC59116	::	setOn			(const u_int8_t _led)
 	switch (led.adr_ledout_pos) {
 			
 		case 0:
-			updateLedOutRegister((*led.ledout_Register) | 0x02, led.ledout_Register, led.adr_ledout);
+			updateLedOutRegister((*led.ledout_Register) | getMaskOn(LEDOUT_POS_0), led.ledout_Register, led.adr_ledout);
 			break;
 			
 		case 1:
-			updateLedOutRegister((*led.ledout_Register) | 0x08, led.ledout_Register, led.adr_ledout);
+			updateLedOutRegister((*led.ledout_Register) | getMaskOn(LEDOUT_POS_1), led.ledout_Register, led.adr_ledout);
 			break;
 			
 		case 2:
-			updateLedOutRegister((*led.ledout_Register) | 0x20, led.ledout_Register, led.adr_ledout);
+			updateLedOutRegister((*led.ledout_Register) | getMaskOn(LEDOUT_POS_2), led.ledout_Register, led.adr_ledout);
 			break;
 			
 		case 3:
-			updateLedOutRegister((*led.ledout_Register) | 0x80, led.ledout_Register, led.adr_ledout);
+			updateLedOutRegister((*led.ledout_Register) | getMaskOn(LEDOUT_POS_3), led.ledout_Register, led.adr_ledout);
 			break;
 			
 		default:
@@ -159,19 +158,19 @@ void TLC59116	::	setOff			(const u_int8_t _led)
 	switch (led.adr_ledout_pos) {
 			
 		case 0:
-			updateLedOutRegister((*led.ledout_Register) & 0xFC, led.ledout_Register, led.adr_ledout);
+			updateLedOutRegister((*led.ledout_Register) & getMaskOff(LEDOUT_POS_0), led.ledout_Register, led.adr_ledout);
 			break;
 			
 		case 1:
-			updateLedOutRegister((*led.ledout_Register) & 0xF3, led.ledout_Register, led.adr_ledout);
+			updateLedOutRegister((*led.ledout_Register) & getMaskOff(LEDOUT_POS_1), led.ledout_Register, led.adr_ledout);
 			break;
 			
 		case 2:
-			updateLedOutRegister((*led.ledout_Register) & 0xCF, led.ledout_Register, led.adr_ledout);
+			updateLedOutRegister((*led.ledout_Register) & getMaskOff(LEDOUT_POS_2), led.ledout_Register, led.adr_ledout);
 			break;
 			
 		case 3:
-			updateLedOutRegister((*led.ledout_Register) & 0x3F, led.ledout_Register, led.adr_ledout);
+			updateLedOutRegister((*led.ledout_Register) & getMaskOff(LEDOUT_POS_3), led.ledout_Register, led.adr_ledout);
 			break;
 			
 		default:
@@ -183,6 +182,114 @@ void TLC59116	::	setPWMDimming	(const u_int8_t _led, u_int16_t _pwm)
 {
 	TLC59116::LED led = ledLUT[_led];
 	device->writeReg(MASK_NO_AUTO_INCR | led.adr_pwm, _pwm);
+}
+
+bool TLC59116	::	isUseGroupDimming		() const
+{
+	return useGroupDimming;
+}
+
+void TLC59116	::	setUseGroupDimming	(const bool _useGroupDimming)
+{
+	if (this->isUseGroupDimming() == _useGroupDimming)
+		return;
+	
+	useGroupDimming = _useGroupDimming;
+	
+	this->handleSetUseGroupDimming(ledout_0Register, ADR_LEDOUT_0);
+	this->handleSetUseGroupDimming(ledout_1Register, ADR_LEDOUT_1);
+	this->handleSetUseGroupDimming(ledout_2Register, ADR_LEDOUT_2);
+	this->handleSetUseGroupDimming(ledout_3Register, ADR_LEDOUT_3);
+	
+}
+
+void TLC59116	::	setGroupPWMDimming (u_int16_t _pwm)
+{
+	device->writeReg(MASK_NO_AUTO_INCR | ADR_GRPPWM, _pwm);
+}
+
+void TLC59116	::	handleSetUseGroupDimming (unsigned char * _LedOut_Register, const u_int16_t _LedOut_Register_ADR)
+{
+	unsigned char newLedOutRegister = *_LedOut_Register;
+	
+	unsigned char led_0 = newLedOutRegister & 0x03;
+	unsigned char led_1 = newLedOutRegister & 0x0C;
+	unsigned char led_2 = newLedOutRegister & 0x30;
+	unsigned char led_3 = newLedOutRegister & 0xC0;
+	
+	if (led_0 != 0x00){
+		newLedOutRegister |= getMaskOn(LEDOUT_POS_0);
+	}
+	
+	if (led_1 != 0x00){
+		newLedOutRegister |= getMaskOn(LEDOUT_POS_1);
+	}
+	
+	if (led_2 != 0x00){
+		newLedOutRegister |= getMaskOn(LEDOUT_POS_2);
+	}
+	
+	if (led_3 != 0x00){
+		newLedOutRegister |= getMaskOn(LEDOUT_POS_3);
+	}
+	
+	if (newLedOutRegister != (*_LedOut_Register))
+	{
+		updateLedOutRegister (newLedOutRegister, _LedOut_Register, _LedOut_Register_ADR);
+	}
+	
+}
+
+unsigned char		TLC59116	::	getMaskOn				(const u_int8_t _pos) const
+{
+	if (_pos == LEDOUT_POS_0){
+		
+		if (useGroupDimming)
+			return 0x03;
+		
+		return 0x02;
+		
+	}else if (_pos == LEDOUT_POS_1){
+		
+		if (useGroupDimming)
+			return 0x0C;
+		
+		return 0x08;
+
+	}else if (_pos == LEDOUT_POS_2){
+		
+		if (useGroupDimming)
+			return 0x30;
+		
+		return 0x20;
+		
+	}else if (_pos == LEDOUT_POS_3){
+		
+		if (useGroupDimming)
+			return 0xC0;
+		
+		return 0x80;
+	}
+	
+	return 0x00;
+}
+
+unsigned char		TLC59116	::	getMaskOff				(const u_int8_t _pos) const
+{
+	if (_pos == LEDOUT_POS_0)
+		return 0xFC;
+		
+	else if (_pos == LEDOUT_POS_1)
+		return 0xF3;
+		
+	else if (_pos == LEDOUT_POS_2)
+		return 0xCF;
+	
+	else if (_pos == LEDOUT_POS_3)
+		return 0x3F;
+		
+	
+	return 0x00;
 }
 
 void TLC59116	::	updateLedOutRegister	(const unsigned char _new_LedOut_Register_Value, unsigned char * _LedOut_Register, const u_int16_t _LedOut_Register_ADR)
