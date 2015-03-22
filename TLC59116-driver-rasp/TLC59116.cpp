@@ -208,6 +208,18 @@ void TLC59116	::	setGroupPWMDimming (u_int16_t _pwm)
 	device->writeReg(MASK_NO_AUTO_INCR | ADR_GRPPWM, _pwm);
 }
 
+void TLC59116	::	setAllPWMDimming (u_int16_t _pwm)
+{
+	const u_int16_t dataSize = 18;
+	unsigned char data[dataSize];
+	
+	
+	for (int i=0; i< 18; i++) // set all PWM_i values to maximum
+		data[i] = _pwm;
+	
+	device->writeReg(MASK_AUTO_INCR | ADR_PWM_0, data, dataSize);
+}
+
 void TLC59116	::	handleSetUseGroupDimming (unsigned char * _LedOut_Register, const u_int16_t _LedOut_Register_ADR)
 {
 	unsigned char newLedOutRegister = *_LedOut_Register;

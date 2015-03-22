@@ -16,45 +16,41 @@ using namespace std;
 
 
 int main(int argc, const char * argv[]) {
-   
-    //std::cout << "Hello, World!\n";
+	
     
-    TLC59116 tlc ("/dev/i2c-1", 0x61, false);
+    TLC59116 tlc ("/dev/i2c-1", 0x61, true);
 	//tlc.allOn();
 	bool flag = false;
 	
-	u_int16_t pwm = 0;
+		tlc.setOn(8);
+		tlc.setPWMDimming(8, 70);
 	
-	tlc.setOn(8);
-	tlc.setOn(9);
-	tlc.setOn(10);
-	tlc.setOn(11);
-	tlc.setUseGroupDimming(true);
-	
-	bool rising=true;
-	while (true){
-		//tlc.setGPWMDimming(8, pwm);
-		tlc.setGroupPWMDimming(pwm);
-		if(rising){
-			pwm++;
-			
-			if (pwm == 0xFF){
-				rising = false;
+		bool complete = false;
+		bool rising=true;
+		u_int16_t pwm = 0;
+		while (!complete){
+			tlc.setGroupPWMDimming( pwm);
+			if(rising){
+				pwm++;
+				
+				if (pwm == 0xFF){
+					rising = false;
+				}
+				
+			}else{
+				pwm--;
+				if (pwm == 0){
+					rising = true;
+				}
 			}
 			
-		}else{
-			pwm--;
-			if (pwm == 0){
-				rising = true;
-			}
+			
+			usleep(2500);
+			
 		}
-		
-		
-		usleep(2500);
-		
-	}
+
 	
-	
+
 	/*
 	u_int8_t l = 0;
 	while (true){

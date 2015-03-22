@@ -92,6 +92,8 @@ public:
 	virtual bool		isUseGroupDimming () const;
 	virtual void		setUseGroupDimming (const bool _useGroupDimming);
 	virtual void		setGroupPWMDimming (u_int16_t _pwm);
+	virtual void		setAllPWMDimming	(u_int16_t _pwm);
+
 	
 private:
 			void		init			();
