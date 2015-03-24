@@ -1,11 +1,14 @@
-/* ---------------------------------------------------------------------------
- ** This software is in the public domain, furnished "as is", without technical
- ** support, and with no warranty, express or implied, as to its usefulness for
- ** any purpose.
- **
- ** Author: Matthieu Holtz
- ** Year: 2015
- ** -------------------------------------------------------------------------*/
+/// -------------------------------------------------------------------------
+/// @file TLC59116.cpp
+/// @brief implementation file for the TLC59116 class.
+/// @author Matthieu Holtz
+/// @version 0
+/// @date 2015
+///
+/// This software is in the public domain, furnished "as is", without technical
+/// support, and with no warranty, express or implied, as to its usefulness for
+/// any purpose.
+/// -------------------------------------------------------------------------
 
 #include "TLC59116.h"
 
