@@ -12,13 +12,15 @@
 
 #include <iostream>
 #include <unistd.h>
+#include <stdlib.h>
 
 #include "TLC59116.h"
 
 using namespace std;
 
-
-int main(int argc, const char * argv[]) {
+#ifdef TEST
+int main(int argc, const char * argv[])
+{
 	
     
     TLC59116 tlc ("/dev/i2c-1", 0x61, true);
@@ -99,5 +101,16 @@ int main(int argc, const char * argv[]) {
 	//std::cout << "Closed : "<< i2c.closeI2C()<< "\n";
 	*/
 	
-	return 0;
+	return EXIT_SUCCESS;
 }
+#else
+
+int main(int argc, const char * argv[])
+{
+	
+	return EXIT_SUCCESS;
+}
+
+
+
+#endif
