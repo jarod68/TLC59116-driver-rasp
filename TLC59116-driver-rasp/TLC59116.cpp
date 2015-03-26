@@ -12,7 +12,7 @@
 
 #include "TLC59116.h"
 
-TLC59116	::	TLC59116	(std::string _i2cFileName, unsigned char _deviceAddress, bool _useGroupDimming)
+TLC59116	::	TLC59116	(std::string _i2cFileName, unsigned char _deviceAddress, bool _useGroupDimming, bool _reset)
 							:
 							device				(new I2C(_i2cFileName, _deviceAddress)),
 							ledout_0Register	(new unsigned char),
@@ -41,13 +41,14 @@ TLC59116	::	TLC59116	(std::string _i2cFileName, unsigned char _deviceAddress, bo
 												),
 							useGroupDimming(_useGroupDimming)
 {
+	if(_reset)
+		this->reset();
 	
-	*ledout_0Register	=	0x00;
-	*ledout_1Register	=	0x00;
-	*ledout_2Register	=	0x00;
-	*ledout_3Register	=	0x00;
+	else
+		this->initFromDevice();
+	
 
-	this->init();
+	this->initFromDevice();
 }
 
 TLC59116	::	~TLC59116	()
@@ -59,11 +60,31 @@ TLC59116	::	~TLC59116	()
 	delete ledout_3Register;
 }
 
-void TLC59116	::	init	()
+void TLC59116	::	initFromDevice	()
+{
+	const u_int16_t dataSize = 2;
+	unsigned char data[dataSize];
+	
+	data[0] = 0x00; // set MODE_1 : no auto increment, oscillator is ON,  no I2C sub-addresses
+	data[1] = 0x00; // set MODE_2 : enable error flags, group control set to dimming
+	device->writeReg(MASK_AUTO_INCR | ADR_MODE_1, data, dataSize);
+	
+	data[0] = 0x00; // set GRPFREQ with 0, this is deactivated in MODE_2
+	device->writeReg(MASK_NO_AUTO_INCR | ADR_GRPFREQ, data, 1);
+	
+	
+	device->readReg(ADR_LEDOUT_0, ledout_0Register);
+	device->readReg(ADR_LEDOUT_1, ledout_1Register);
+	device->readReg(ADR_LEDOUT_2, ledout_2Register);
+	device->readReg(ADR_LEDOUT_3, ledout_3Register);
+	
+}
+
+void			TLC59116	::	reset()
 {
 	const u_int16_t dataSize = 24;
 	unsigned char data[dataSize];
-
+	
 	data[0] = 0x00; // set MODE_1 : no auto increment, oscillator is ON,  no I2C sub-addresses
 	data[1] = 0x00; // set MODE_2 : enable error flags, group control set to dimming
 	
@@ -72,6 +93,11 @@ void TLC59116	::	init	()
 	
 	data[18] = 0xFF; // set GRPPWM with maximum
 	data[19] = 0x00; // set GRPFREQ with 0, this is deactivated in MODE_2
+	
+	*ledout_0Register	=	0x00;
+	*ledout_1Register	=	0x00;
+	*ledout_2Register	=	0x00;
+	*ledout_3Register	=	0x00;
 	
 	data[20] = *ledout_0Register;
 	data[21] = *ledout_1Register;

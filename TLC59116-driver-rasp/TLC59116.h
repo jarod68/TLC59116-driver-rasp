@@ -85,14 +85,15 @@ private:
 	unsigned char *				ledout_3Register;	///< image of the LEDOUT3 register
 	const struct TLC59116::LED	ledLUT[TLC59116_MAX_LED]; ///< Look up table with all LED
 	bool						useGroupDimming;	//< define wether or not we use the group dimming function
-	
+
 public:
 	/// @brief Constructor with I2C controller filename and TLC address on the bus. In addition you can enable the group dimming
 	///
 	/// @param _i2cFileName		: the linux I2C device filename
 	/// @param _deviceAddress	: the TLC address on the I2C bus
 	/// @param _useGroupDimming : to enable or not the group dimming function (default set to false)
-							TLC59116				(std::string _i2cFileName, unsigned char _deviceAddress, bool _useGroupDimming=false);
+	/// @param _reset			: if set to true, the device is reseted with all output to OFF, dimming values to 255 (default set to true)
+							TLC59116				(std::string _i2cFileName, unsigned char _deviceAddress, bool _useGroupDimming=false, bool _reset=true);
 	
 	/// @brief Destructor
 	virtual					~TLC59116				();
@@ -171,10 +172,13 @@ public:
 	/// @return raw value of the register
 	virtual unsigned char	getErrorFLag2			() const;
 	
+	/// @brief Reset the configuration with all LED OFF, dimming value to maximum
+	virtual void			reset					();
+	
 private:
 	
 	/// @brief Internal initialization of the registers. This method is called from the constructor
-			void			init					();
+			void			initFromDevice			();
 	
 	/// @brief Internal handle of the LEDOUT_x registers when turning ON or OFF a LED output
 			void			updateLedOutRegister	(const unsigned char _new_LedOut_Register_Value,
@@ -197,6 +201,7 @@ private:
 	/// @param pos		: the position of the 1st bit of the LED in LEDOUT
 	/// @return the mask to apply on LEDOUT_x register to switch OFF the LED
 	unsigned char			getMaskOff				(const u_int8_t pos) const;
+	
 };
 
 
