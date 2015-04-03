@@ -11,6 +11,7 @@
 		C9428E631ABDAF9F009BB0C8 /* TLC59116.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9428E611ABDAF9F009BB0C8 /* TLC59116.cpp */; };
 		C9B5248A1ABB00C300324B1D /* I2C.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9B524891ABB00C300324B1D /* I2C.cpp */; };
 		C9B5248C1ABB09E300324B1D /* makefile in Sources */ = {isa = PBXBuildFile; fileRef = C9B5248B1ABB09E300324B1D /* makefile */; };
+		C9CD873E1ACEEB29001B3B94 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9CD873D1ACEEB29001B3B94 /* main.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -33,6 +34,7 @@
 		C9B524881ABB00A500324B1D /* I2C.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = I2C.h; sourceTree = "<group>"; };
 		C9B524891ABB00C300324B1D /* I2C.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = I2C.cpp; sourceTree = "<group>"; };
 		C9B5248B1ABB09E300324B1D /* makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = makefile; sourceTree = "<group>"; };
+		C9CD873D1ACEEB29001B3B94 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +68,7 @@
 			isa = PBXGroup;
 			children = (
 				C9342E491ABB002C0090E000 /* main.cpp */,
+				C9CD873D1ACEEB29001B3B94 /* main.cpp */,
 				C9B524881ABB00A500324B1D /* I2C.h */,
 				C9B524891ABB00C300324B1D /* I2C.cpp */,
 				C9B5248B1ABB09E300324B1D /* makefile */,
@@ -134,6 +137,7 @@
 				C9B5248A1ABB00C300324B1D /* I2C.cpp in Sources */,
 				C9342E4A1ABB002C0090E000 /* main.cpp in Sources */,
 				C9428E631ABDAF9F009BB0C8 /* TLC59116.cpp in Sources */,
+				C9CD873E1ACEEB29001B3B94 /* main.cpp in Sources */,
 				C9B5248C1ABB09E300324B1D /* makefile in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
