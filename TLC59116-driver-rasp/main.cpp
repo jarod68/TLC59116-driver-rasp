@@ -141,10 +141,10 @@ void printHelp()
 int parseArguments (int argc, char ** argv)
 {
 	int c;
-	int digit_optind = 0;
+	//int digit_optind = 0;
 	
 	while (1) {
-		int this_option_optind = optind ? optind : 1;
+		//int this_option_optind = optind ? optind : 1;
 		int option_index = 0;
 		
 		c = getopt_long(argc, argv, "h?", long_options, &option_index);
