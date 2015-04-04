@@ -154,12 +154,12 @@ int parseArguments (int argc, char ** argv)
 					break;
 					
 				case ARG_ON__INDEX: //on
-					if(on == true)
+					if(on)
 					{
 						std::cerr << "You can only set option "<< long_options[ARG_ON__INDEX].name << " one time" << std::endl;
 						return EXIT_FAILURE;
 					}
-					if(off == true )
+					if(off)
 					{
 						std::cerr << "You can't use " << long_options[ARG_ON__INDEX].name <<" with " << long_options[ARG_OFF__INDEX].name << std::endl;
 						return EXIT_FAILURE;
@@ -169,12 +169,12 @@ int parseArguments (int argc, char ** argv)
 					break;
 					
 				case ARG_OFF__INDEX: //off
-					if(off == true)
+					if(off)
 					{
 						std::cerr << "You can only set option "<< long_options[ARG_OFF__INDEX].name << " one time" << std::endl;
 						return EXIT_FAILURE;
 					}
-					if(on == true )
+					if(on)
 					{
 						std::cerr << "You can't use " << long_options[ARG_ON__INDEX].name <<" with " << long_options[ARG_OFF__INDEX].name << std::endl;
 						return EXIT_FAILURE;
@@ -183,7 +183,7 @@ int parseArguments (int argc, char ** argv)
 					break;
 					
 				case ARG_SET_PWM__INDEX: //set-pwm
-					if(setPWM == true)
+					if(setPWM)
 					{
 						std::cerr << "You can only set option "<< long_options[ARG_SET_PWM__INDEX].name << " one time" << std::endl;
 						return EXIT_FAILURE;
@@ -193,7 +193,7 @@ int parseArguments (int argc, char ** argv)
 					break;
 					
 				case ARG_GET_PWM__INDEX: //get-pwm
-					if(getPWM == true)
+					if(getPWM)
 					{
 						std::cerr << "You can only set option "<< long_options[ARG_GET_PWM__INDEX].name << " one time" << std::endl;
 						return EXIT_FAILURE;
@@ -202,7 +202,7 @@ int parseArguments (int argc, char ** argv)
 					
 					break;
 				case ARG_USEGROUP__INDEX: //usegroup
-					if(setUseGroup == true)
+					if(setUseGroup)
 					{
 						std::cerr << "You can only apply option "<< long_options[ARG_USEGROUP__INDEX].name << " one time" << std::endl;
 						return EXIT_FAILURE;
@@ -210,7 +210,7 @@ int parseArguments (int argc, char ** argv)
 					setUseGroup = true;
 					break;
 				case ARG_SET_GROUP_PWM__INDEX: //set-group-pwm
-					if(setGroupPWM == true)
+					if(setGroupPWM)
 					{
 						std::cerr << "You can only set option "<< long_options[ARG_SET_GROUP_PWM__INDEX].name << " one time" << std::endl;
 						return EXIT_FAILURE;
@@ -219,7 +219,7 @@ int parseArguments (int argc, char ** argv)
 					groupPwm = (int16_t)atoi(optarg);
 					break;
 				case ARG_GET_GROUP_PWM__INDEX: //get-group-pwm
-					if(getGroupPWM == true)
+					if(getGroupPWM)
 					{
 						std::cerr << "You can only set option "<< long_options[ARG_GET_GROUP_PWM__INDEX].name << " one time" << std::endl;
 						return EXIT_FAILURE;
@@ -249,12 +249,12 @@ int parseArguments (int argc, char ** argv)
 					break;
 				case ARG_ALL_ON__INDEX: //all-on
 					
-					if(allOn == true)
+					if(allOn)
 					{
 						std::cerr << "You can only set option "<< long_options[ARG_ALL_ON__INDEX].name << " one time" << std::endl;
 						return EXIT_FAILURE;
 					}
-					if(allOff == true )
+					if(allOff)
 					{
 						std::cerr << "You can't use " << long_options[ARG_ALL_ON__INDEX].name <<" with " << long_options[ARG_ALL_OFF__INDEX].name << std::endl;
 						return EXIT_FAILURE;
@@ -263,13 +263,13 @@ int parseArguments (int argc, char ** argv)
 					break;
 				case ARG_ALL_OFF__INDEX: //all-off
 					
-					if(allOff == true )
+					if(allOff)
 					{
 						std::cerr << "You can only set option "<< long_options[ARG_ALL_OFF__INDEX].name << " one time" << std::endl;
 						return EXIT_FAILURE;
 					}
 					
-					if(allOn == true )
+					if(allOn)
 					{
 						std::cerr << "You can't use " << long_options[ARG_ALL_ON__INDEX].name <<" with " << long_options[ARG_ALL_OFF__INDEX].name << std::endl;
 						return EXIT_FAILURE;
@@ -280,7 +280,7 @@ int parseArguments (int argc, char ** argv)
 					
 				case ARG_SET_ALL_PWM__INDEX: //set-all-pwm
 					
-					if(setAllPWM == true)
+					if(setAllPWM)
 					{
 						std::cerr << "You can only set option "<< long_options[ARG_SET_ALL_PWM__INDEX].name << " one time" << std::endl;
 						return EXIT_FAILURE;
@@ -292,7 +292,7 @@ int parseArguments (int argc, char ** argv)
 					
 				case ARG_RESET__INDEX: //reset
 					
-					if(reset == true)
+					if(reset)
 					{
 						std::cerr << "You can only apply option "<< long_options[ARG_RESET__INDEX].name << " one time" << std::endl;
 						return EXIT_FAILURE;
