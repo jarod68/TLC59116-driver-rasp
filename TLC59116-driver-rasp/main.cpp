@@ -120,6 +120,18 @@ static struct option long_options[] = {
 #define ARG_RESET__INDEX			13
 #define ARG_HELP__INDEX				14
 
+int mutualArgError(std::string arg1, std::string arg2, std::string optionalText="")
+{
+	std::cerr << "You can't use " << arg1 <<" with " << arg2 << " " << optionalText << std::endl;
+	return EXIT_FAILURE;
+}
+
+int multipleTimeArgError(std::string arg, std::string optionalText="")
+{
+	std::cerr << "You can only set option "<< arg << " one time " << optionalText << std::endl;
+	return EXIT_FAILURE;
+}
+
 void printHelp()
 {
 	std::cerr << "Usage:" << std::endl;
@@ -146,8 +158,7 @@ int parseArguments (int argc, char ** argv)
 				case ARG_LED__INDEX: //led
 					if(led != -1)
 					{
-						std::cerr << "You can only set option "<< long_options[ARG_LED__INDEX].name << " one time" << std::endl;
-						return EXIT_FAILURE;
+						return multipleTimeArgError(long_options[ARG_LED__INDEX].name);
 					}
 					led=(int16_t) atoi(optarg);
 					
@@ -156,13 +167,11 @@ int parseArguments (int argc, char ** argv)
 				case ARG_ON__INDEX: //on
 					if(on)
 					{
-						std::cerr << "You can only set option "<< long_options[ARG_ON__INDEX].name << " one time" << std::endl;
-						return EXIT_FAILURE;
+						return multipleTimeArgError(long_options[ARG_ON__INDEX].name);
 					}
 					if(off)
 					{
-						std::cerr << "You can't use " << long_options[ARG_ON__INDEX].name <<" with " << long_options[ARG_OFF__INDEX].name << std::endl;
-						return EXIT_FAILURE;
+						return mutualArgError(long_options[ARG_ON__INDEX].name,long_options[ARG_OFF__INDEX].name);
 					}
 					on=true;
 					
@@ -171,13 +180,10 @@ int parseArguments (int argc, char ** argv)
 				case ARG_OFF__INDEX: //off
 					if(off)
 					{
-						std::cerr << "You can only set option "<< long_options[ARG_OFF__INDEX].name << " one time" << std::endl;
-						return EXIT_FAILURE;
-					}
+						return multipleTimeArgError(long_options[ARG_OFF__INDEX].name);					}
 					if(on)
 					{
-						std::cerr << "You can't use " << long_options[ARG_ON__INDEX].name <<" with " << long_options[ARG_OFF__INDEX].name << std::endl;
-						return EXIT_FAILURE;
+						return mutualArgError(long_options[ARG_ON__INDEX].name,long_options[ARG_OFF__INDEX].name);
 					}
 					off=true;
 					break;
@@ -185,8 +191,7 @@ int parseArguments (int argc, char ** argv)
 				case ARG_SET_PWM__INDEX: //set-pwm
 					if(setPWM)
 					{
-						std::cerr << "You can only set option "<< long_options[ARG_SET_PWM__INDEX].name << " one time" << std::endl;
-						return EXIT_FAILURE;
+						return multipleTimeArgError(long_options[ARG_SET_PWM__INDEX].name);
 					}
 					setPWM = true;
 					pwm = (int16_t)atoi(optarg);
@@ -195,8 +200,7 @@ int parseArguments (int argc, char ** argv)
 				case ARG_GET_PWM__INDEX: //get-pwm
 					if(getPWM)
 					{
-						std::cerr << "You can only set option "<< long_options[ARG_GET_PWM__INDEX].name << " one time" << std::endl;
-						return EXIT_FAILURE;
+						return multipleTimeArgError(long_options[ARG_GET_PWM__INDEX].name);
 					}
 					getPWM = true;
 					
@@ -204,16 +208,14 @@ int parseArguments (int argc, char ** argv)
 				case ARG_USEGROUP__INDEX: //usegroup
 					if(setUseGroup)
 					{
-						std::cerr << "You can only apply option "<< long_options[ARG_USEGROUP__INDEX].name << " one time" << std::endl;
-						return EXIT_FAILURE;
+						return multipleTimeArgError(long_options[ARG_USEGROUP__INDEX].name);
 					}
 					setUseGroup = true;
 					break;
 				case ARG_SET_GROUP_PWM__INDEX: //set-group-pwm
 					if(setGroupPWM)
 					{
-						std::cerr << "You can only set option "<< long_options[ARG_SET_GROUP_PWM__INDEX].name << " one time" << std::endl;
-						return EXIT_FAILURE;
+						return multipleTimeArgError(long_options[ARG_SET_GROUP_PWM__INDEX].name);
 					}
 					setGroupPWM = true;
 					groupPwm = (int16_t)atoi(optarg);
@@ -221,8 +223,7 @@ int parseArguments (int argc, char ** argv)
 				case ARG_GET_GROUP_PWM__INDEX: //get-group-pwm
 					if(getGroupPWM)
 					{
-						std::cerr << "You can only set option "<< long_options[ARG_GET_GROUP_PWM__INDEX].name << " one time" << std::endl;
-						return EXIT_FAILURE;
+						return multipleTimeArgError(long_options[ARG_GET_GROUP_PWM__INDEX].name);
 					}
 					getGroupPWM = true;
 					break;
@@ -230,8 +231,7 @@ int parseArguments (int argc, char ** argv)
 				case ARG_I2C_BUS__INDEX: //i2c-bus
 					if(i2cBus != "")
 					{
-						std::cerr << "You can only set option "<< long_options[ARG_I2C_BUS__INDEX].name << " one time" << std::endl;
-						return EXIT_FAILURE;
+						return multipleTimeArgError(long_options[ARG_I2C_BUS__INDEX].name);
 					}
 					i2cBus = string(optarg);
 					std::cout <<"i2cBus set " << i2cBus << std::endl;
@@ -240,8 +240,7 @@ int parseArguments (int argc, char ** argv)
 					
 					if(i2cAdr != 0x00)
 					{
-						std::cerr << "You can only set option " << long_options[ARG_I2C_ADR__INDEX].name << " one time" << std::endl;
-						return EXIT_FAILURE;
+						return multipleTimeArgError(long_options[ARG_I2C_ADR__INDEX].name);
 					}
 					
 					i2cAdr = (unsigned char) strtol(optarg, NULL, 0);
@@ -251,13 +250,11 @@ int parseArguments (int argc, char ** argv)
 					
 					if(allOn)
 					{
-						std::cerr << "You can only set option "<< long_options[ARG_ALL_ON__INDEX].name << " one time" << std::endl;
-						return EXIT_FAILURE;
+						return multipleTimeArgError(long_options[ARG_ALL_ON__INDEX].name);
 					}
 					if(allOff)
 					{
-						std::cerr << "You can't use " << long_options[ARG_ALL_ON__INDEX].name <<" with " << long_options[ARG_ALL_OFF__INDEX].name << std::endl;
-						return EXIT_FAILURE;
+						return mutualArgError(long_options[ARG_ALL_ON__INDEX].name,long_options[ARG_ALL_OFF__INDEX].name);
 					}
 					allOn=true;
 					break;
@@ -265,14 +262,12 @@ int parseArguments (int argc, char ** argv)
 					
 					if(allOff)
 					{
-						std::cerr << "You can only set option "<< long_options[ARG_ALL_OFF__INDEX].name << " one time" << std::endl;
-						return EXIT_FAILURE;
+						return multipleTimeArgError(long_options[ARG_ALL_OFF__INDEX].name);
 					}
 					
 					if(allOn)
 					{
-						std::cerr << "You can't use " << long_options[ARG_ALL_ON__INDEX].name <<" with " << long_options[ARG_ALL_OFF__INDEX].name << std::endl;
-						return EXIT_FAILURE;
+						return mutualArgError(long_options[ARG_ALL_ON__INDEX].name,long_options[ARG_ALL_OFF__INDEX].name);
 					}
 					
 					allOff = true;
@@ -282,8 +277,7 @@ int parseArguments (int argc, char ** argv)
 					
 					if(setAllPWM)
 					{
-						std::cerr << "You can only set option "<< long_options[ARG_SET_ALL_PWM__INDEX].name << " one time" << std::endl;
-						return EXIT_FAILURE;
+						return multipleTimeArgError(long_options[ARG_SET_ALL_PWM__INDEX].name);
 					}
 					
 					setAllPWM = true;
@@ -294,8 +288,7 @@ int parseArguments (int argc, char ** argv)
 					
 					if(reset)
 					{
-						std::cerr << "You can only apply option "<< long_options[ARG_RESET__INDEX].name << " one time" << std::endl;
-						return EXIT_FAILURE;
+						return multipleTimeArgError(long_options[ARG_RESET__INDEX].name);
 					}
 					
 					reset=true;
