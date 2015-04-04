@@ -134,7 +134,26 @@ int multipleTimeArgError(std::string arg, std::string optionalText="")
 
 void printHelp()
 {
-	std::cerr << "Usage:" << std::endl;
+	std::cout << "Usage:" << std::endl;
+	std::cout << "tlc [OPTION]... --i2c-bus=I2C_BUS_FILE --i2c-adr=I2C_DEVICE_ADDRESS" << std::endl;
+	std::cout << "Description:" << std::endl;
+	std::cout << "This program is a driver for the TI TLC59116 I2C 16 output LED controller." << std::endl;
+	std::cout << std::endl;
+	std::cout << "[Options] are" << std::endl;
+	std::cout << '\t' << "--led=VALUE : specified the led you want to control" << std::endl;
+	std::cout << '\t' << "--on : turn the specifed led (--led) to ON" << std::endl;
+	std::cout << '\t' << "--off : turn the specified led (--led) to OFF" << std::endl;
+	std::cout << '\t' << "--set-pwm=VALUE : defined the PWM value [0-255] to use with the specified LED (--led)" << std::endl;
+	std::cout << '\t' << "--get-pwm : print the current PWM value [0-255] in use by the specified LED (--led)" << std::endl;
+	std::cout << '\t' << "--usegroup : use or not the group dimming (additional PWM signal)" << std::endl;
+	std::cout << '\t' << "--get-group-pwm : print the current PWM value [0-255] in use for the group dimming" << std::endl;
+	std::cout << '\t' << "--set-group-pwm=VALUE : defined the PWM value [0-255] to use with the group dimming" << std::endl;
+	std::cout << '\t' << "--all-on : turn all LED ON" << std::endl;
+	std::cout << '\t' << "--all-off : turn all LED OFF" << std::endl;
+	std::cout << '\t' << "--set-all-pwm=VALUE : set all individual PWM values [0-255] with the specified value" << std::endl;
+	std::cout << '\t' << "--reset : reset the controller, all LED OFF, no group dimming, and all PWM (inclusive the group dimming) are set to 255" << std::endl;
+	std::cout << '\t' << "--help : print this help message" << std::endl;
+	
 	exit(EXIT_FAILURE);
 }
 
