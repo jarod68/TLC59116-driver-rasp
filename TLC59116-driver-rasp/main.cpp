@@ -83,6 +83,7 @@ bool allOn					= false;
 bool allOff					= false;
 bool setAllPWM				= false;
 bool reset					= false;
+bool help					= false;
 
 static struct option long_options[] = {
 										{"led",				required_argument,	0,  0 },
@@ -99,12 +100,30 @@ static struct option long_options[] = {
 										{"all-off",			no_argument,		0,  0 },
 										{"set-all-pwm",		required_argument,	0,  0 },
 										{"reset",			no_argument,		0,  0 },
+										{"help",			no_argument,		0,  0 },
 										{0,					0,					0,  0 }
 };
 
+#define ARG_LED__INDEX				0
+#define ARG_ON__INDEX				1
+#define ARG_OFF__INDEX				2
+#define ARG_SET_PWM__INDEX			3
+#define ARG_GET_PWM__INDEX			4
+#define ARG_USEGROUP__INDEX			5
+#define ARG_SET_GROUP_PWM__INDEX	6
+#define ARG_GET_GROUP_PWM__INDEX	7
+#define ARG_I2C_BUS__INDEX			8
+#define ARG_I2C_ADR__INDEX			9
+#define ARG_ALL_ON__INDEX			10
+#define ARG_ALL_OFF__INDEX			11
+#define ARG_SET_ALL_PWM__INDEX		12
+#define ARG_RESET__INDEX			13
+#define ARG_HELP__INDEX				14
+
 void printHelp()
 {
-	
+	std::cerr << "Usage:" << std::endl;
+	exit(EXIT_FAILURE);
 }
 
 int parseArguments (int argc, char ** argv)
@@ -116,143 +135,154 @@ int parseArguments (int argc, char ** argv)
 		int this_option_optind = optind ? optind : 1;
 		int option_index = 0;
 		
-		c = getopt_long(argc, argv, "", long_options, &option_index);
+		c = getopt_long(argc, argv, "h?", long_options, &option_index);
+		
 		if (c == -1)
-			
 			break;
+		
 		if (c == 0)
 		{
 			switch (option_index) {
-				case 0: //led
+				case ARG_LED__INDEX: //led
 					if(led != -1)
 					{
-						std::cerr << "You can only set option --led one time" << std::endl;
+						std::cerr << "You can only set option "<< long_options[ARG_LED__INDEX].name << " one time" << std::endl;
 						return EXIT_FAILURE;
 					}
 					led=(int16_t) atoi(optarg);
 					
 					break;
 					
-				case 1: //on
+				case ARG_ON__INDEX: //on
 					if(on == true)
 					{
-						std::cerr << "You can only set option --on one time" << std::endl;
+						std::cerr << "You can only set option "<< long_options[ARG_ON__INDEX].name << " one time" << std::endl;
+						return EXIT_FAILURE;
+					}
+					if(off == true )
+					{
+						std::cerr << "You can't use " << long_options[ARG_ON__INDEX].name <<" with " << long_options[ARG_OFF__INDEX].name << std::endl;
 						return EXIT_FAILURE;
 					}
 					on=true;
 					
 					break;
 					
-				case 2: //off
+				case ARG_OFF__INDEX: //off
 					if(off == true)
 					{
-						std::cerr << "You can only set option --off one time" << std::endl;
+						std::cerr << "You can only set option "<< long_options[ARG_OFF__INDEX].name << " one time" << std::endl;
+						return EXIT_FAILURE;
+					}
+					if(on == true )
+					{
+						std::cerr << "You can't use " << long_options[ARG_ON__INDEX].name <<" with " << long_options[ARG_OFF__INDEX].name << std::endl;
 						return EXIT_FAILURE;
 					}
 					off=true;
 					break;
 					
-				case 3: //set-pwm
+				case ARG_SET_PWM__INDEX: //set-pwm
 					if(setPWM == true)
 					{
-						std::cerr << "You can only set option --set-pwm one time" << std::endl;
-						return EXIT_FAILURE;
-					}
-					if(getPWM == true)
-					{
-						std::cerr << "You can't use --get-pwm with --set-pwm" << std::endl;
+						std::cerr << "You can only set option "<< long_options[ARG_SET_PWM__INDEX].name << " one time" << std::endl;
 						return EXIT_FAILURE;
 					}
 					setPWM = true;
 					pwm = (int16_t)atoi(optarg);
 					break;
 					
-				case 4: //get-pwm
+				case ARG_GET_PWM__INDEX: //get-pwm
 					if(getPWM == true)
 					{
-						std::cerr << "You can only set option --get-pwm one time" << std::endl;
-						return EXIT_FAILURE;
-					}
-					if(setPWM == true)
-					{
-						std::cerr << "You can't use --get-pwm with --set-pwm" << std::endl;
+						std::cerr << "You can only set option "<< long_options[ARG_GET_PWM__INDEX].name << " one time" << std::endl;
 						return EXIT_FAILURE;
 					}
 					getPWM = true;
 					
 					break;
-				case 5: //usegroup
+				case ARG_USEGROUP__INDEX: //usegroup
 					if(setUseGroup == true)
 					{
-						std::cerr << "You can only apply option --usegroup one time" << std::endl;
+						std::cerr << "You can only apply option "<< long_options[ARG_USEGROUP__INDEX].name << " one time" << std::endl;
 						return EXIT_FAILURE;
 					}
 					setUseGroup = true;
 					break;
-				case 6: //set-group-pwm
+				case ARG_SET_GROUP_PWM__INDEX: //set-group-pwm
 					if(setGroupPWM == true)
 					{
-						std::cerr << "You can only set option --set-group-pwm one time" << std::endl;
+						std::cerr << "You can only set option "<< long_options[ARG_SET_GROUP_PWM__INDEX].name << " one time" << std::endl;
 						return EXIT_FAILURE;
 					}
 					setGroupPWM = true;
 					groupPwm = (int16_t)atoi(optarg);
 					break;
-				case 7: //get-group-pwm
+				case ARG_GET_GROUP_PWM__INDEX: //get-group-pwm
 					if(getGroupPWM == true)
 					{
-						std::cerr << "You can only set option --get-group-pwm one time" << std::endl;
+						std::cerr << "You can only set option "<< long_options[ARG_GET_GROUP_PWM__INDEX].name << " one time" << std::endl;
 						return EXIT_FAILURE;
 					}
 					getGroupPWM = true;
 					break;
 					
-				case 8: //i2c-bus
+				case ARG_I2C_BUS__INDEX: //i2c-bus
 					if(i2cBus != "")
 					{
-						std::cerr << "You can only set option --i2c-bus one time" << std::endl;
+						std::cerr << "You can only set option "<< long_options[ARG_I2C_BUS__INDEX].name << " one time" << std::endl;
 						return EXIT_FAILURE;
 					}
 					i2cBus = string(optarg);
-					std::cout <<"i2cBus set " << optarg << std::endl;
+					std::cout <<"i2cBus set " << i2cBus << std::endl;
 					break;
-				case 9: //i2c-adr
+				case ARG_I2C_ADR__INDEX: //i2c-adr
 					
 					if(i2cAdr != 0x00)
 					{
-						std::cerr << "You can only set option --i2c-adr one time" << std::endl;
+						std::cerr << "You can only set option " << long_options[ARG_I2C_ADR__INDEX].name << " one time" << std::endl;
 						return EXIT_FAILURE;
 					}
 					
 					i2cAdr = (unsigned char) strtol(optarg, NULL, 0);
 					std::cout <<"i2cAdr set "<< optarg << std::endl;
 					break;
-				case 10: //all-on
+				case ARG_ALL_ON__INDEX: //all-on
 					
 					if(allOn == true)
 					{
-						std::cerr << "You can only set option --all-on one time" << std::endl;
+						std::cerr << "You can only set option "<< long_options[ARG_ALL_ON__INDEX].name << " one time" << std::endl;
 						return EXIT_FAILURE;
 					}
-					
+					if(allOff == true )
+					{
+						std::cerr << "You can't use " << long_options[ARG_ALL_ON__INDEX].name <<" with " << long_options[ARG_ALL_OFF__INDEX].name << std::endl;
+						return EXIT_FAILURE;
+					}
 					allOn=true;
 					break;
-				case 11: //all-off
+				case ARG_ALL_OFF__INDEX: //all-off
 					
 					if(allOff == true )
 					{
-						std::cerr << "You can only set option --all-off one time" << std::endl;
+						std::cerr << "You can only set option "<< long_options[ARG_ALL_OFF__INDEX].name << " one time" << std::endl;
+						return EXIT_FAILURE;
+					}
+					
+					if(allOn == true )
+					{
+						std::cerr << "You can't use " << long_options[ARG_ALL_ON__INDEX].name <<" with " << long_options[ARG_ALL_OFF__INDEX].name << std::endl;
 						return EXIT_FAILURE;
 					}
 					
 					allOff = true;
 					break;
 					
-				case 12: //set-all-pwm
+				case ARG_SET_ALL_PWM__INDEX: //set-all-pwm
 					
 					if(setAllPWM == true)
 					{
-						std::cerr << "You can only set option --set-all-pwm one time" << std::endl;
+						std::cerr << "You can only set option "<< long_options[ARG_SET_ALL_PWM__INDEX].name << " one time" << std::endl;
 						return EXIT_FAILURE;
 					}
 					
@@ -260,22 +290,30 @@ int parseArguments (int argc, char ** argv)
 					pwm = (int16_t)atoi(optarg);
 					break;
 					
-				case 13: //reset
+				case ARG_RESET__INDEX: //reset
 					
 					if(reset == true)
 					{
-						std::cerr << "You can only apply option --reset one time" << std::endl;
+						std::cerr << "You can only apply option "<< long_options[ARG_RESET__INDEX].name << " one time" << std::endl;
 						return EXIT_FAILURE;
 					}
 					
 					reset=true;
 					break;
 					
+				case ARG_HELP__INDEX: //help
+					printHelp();
+					break;
+					
 				default:
 					break;
 			}
 			
-		}else if (c =='?')
+		}else if (c == '?')
+		{
+			printHelp();
+			
+		}else if (c == 'h')
 		{
 			printHelp();
 		}
@@ -309,7 +347,7 @@ int main(int argc, char ** argv)
 	
 	if (i2cBus == "" || i2cAdr == 0x00 )
 	{
-		std::cout <<"--i2c-adr and --i2c-bus need to be set with correct values" << std::endl;
+		std::cout <<long_options[ARG_I2C_ADR__INDEX].name <<" and "<<long_options[ARG_I2C_BUS__INDEX].name << " need to be set with correct values" << std::endl;
 		return EXIT_FAILURE;
 
 	}
